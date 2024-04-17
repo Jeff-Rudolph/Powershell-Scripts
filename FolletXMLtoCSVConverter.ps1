@@ -29,6 +29,7 @@ if($path.StartsWith('"')){ $path = $path.Substring(1, $path.Length-2) }
 
 
 #Get all <item> tags with their subtags from xml file
+[xml]$types = Get-Content $path
 $items = Select-Xml -Xml $types -XPath "//Item" 
 
 #instantiating empty mutable non type specific list
