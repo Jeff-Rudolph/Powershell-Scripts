@@ -40,7 +40,7 @@ $accountsToDisable += Get-ADUser -SearchBase $staffOU -filter * -properties * | 
 #disable all of these accounts and enter todays date in the "State" field for them
 foreach ($account in $accountsToDisable){
     Set-ADUser -Identity $account.SamAccountName -State $todaysDate 
-    Set-ADUser -Identity $_.SamAccountName -Description ("Account Auto-Disabled by script on $(get-date)")
+    Set-ADUser -Identity $account.SamAccountName -Description ("Account Auto-Disabled by script on $(get-date)")
     Disable-ADAccount -Identity $account.SamAccountName
 }
 #log disabled account as csv
@@ -54,8 +54,8 @@ if($accountsToDisable.Count -ne 0){
 #Disable Student Accounts that have never logged in $LastLogon == null with date created > 120 days in past
 $neverLoggedIn = Get-ADUser -SearchBase $studentsOU -Filter * -Properties * | Where-Object {$_.LastLogonDate -eq $null} | Where-Object {$_.Enabled -eq $true} | Where-Object {$_.whenCreated -lt $oneTwentyDaysAgo} | Where-Object {$_.State -eq $null} | Where-Object {$_.Description -inotlike "*(Service Account)*"}
 foreach ($account in $neverLoggedIn){
-    Set-ADUser -Identity $_.SamAccountName -State $todaysDate
-    Set-ADUser -Identity $_.SamAccountName -Description ("Account Auto-Disabled by script on $(get-date)")
+    Set-ADUser -Identity $account.SamAccountName -State $todaysDate
+    Set-ADUser -Identity $account.SamAccountName -Description ("Account Auto-Disabled by script on $(get-date)")
     Disable-ADAccount -Identity $account.SamAccountName
 }
 #log disabled student accounts that never logged in as csv
@@ -83,5 +83,5 @@ if($accountsToDelete.Count -ne 0){
 #This following code block will clear the disabled date from the users attribs.
 $reenabledUsers = Get-Aduser -filter * -Properties * | Where-Object {$_.enabled -eq $true} | Where-Object {$_.State -ne $null}
 foreach ($account in $reenabledUsers){
-    Set-ADUser -Identity $_.SamAccountName -State $null
+    Set-ADUser -Identity $account.SamAccountName -State $null
 }
