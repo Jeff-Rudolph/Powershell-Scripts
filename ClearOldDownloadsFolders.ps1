@@ -46,7 +46,7 @@ if(($answer -eq "Y") -or ($answer -eq "y")){
     $oldDownloadFoldersFilePaths = $oldDownloadFolders.FullName
     foreach($filepath in $oldDownloadFoldersFilePaths){
         $deletedFileSize += (Get-ChildItem -Path $filepath -Recurse -Force | Measure-Object -Sum Length).Sum
-        Get-childitem -path $filepath -Recurse -ErrorAction SilentlyContinue -Force |  Remove-Item -Force -Recurse -Err orAction SilentlyContinue
+        Get-childitem -path $filepath -Recurse -ErrorAction SilentlyContinue -Force |  Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
     }
     $deletedFileSize = [math]::Round(($deletedFileSize / 1GB),2)
     write-host "`nDeleted $($deletedFileSize) GB"
